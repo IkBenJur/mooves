@@ -62,5 +62,5 @@ def register():
 @app.route("/user/<username>")
 @login_required
 def userPage(username):
-    u = User.query.filter_by(username=username)
+    u = User.query.filter_by(username=username).first_or_404()
     return render_template("userPage.html", user=u)
