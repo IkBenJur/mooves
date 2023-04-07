@@ -4,8 +4,6 @@ from flask_login import UserMixin
 from hashlib import md5
 from datetime import datetime
 
-#Laat users favoriete films kiezen en reviews scrhijven
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), index=True, unique=True)
@@ -36,18 +34,13 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
-    user_id = db.Column(db.Integer, db.ForeingKey("user.id"))
-    movie = db.Column(db.Integer, db.ForeingKey("movie.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    movie = db.Column(db.Integer, db.ForeignKey("movie.id"))
     reviewBody = db.Column(db.String(140))
     stars = db.Column(db.Integer, index=True)
-    
-# class Genre(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     genre = db.Column(db.String(64), index=True, unique=True)
-#     movies = db.Relationship("Movie", backref="genre", lazy="dynamic")
 
-#     def __repr__(self):
-#         return f"{self.genre}"
+    def __repr__(self):
+        return f"{self.user_id}, {self.movie}"
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
