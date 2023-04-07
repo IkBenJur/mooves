@@ -11,7 +11,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    reviews = db.relationship("Review", backref="author", lazy="dynamic")
+    reviews = db.Relationship("Review", backref="author", lazy="dynamic")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -45,7 +45,7 @@ class Review(db.Model):
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), index=True)
-    reviews = db.relationship("Review", backref="movie", lazy="dynamic")
+    reviews = db.Relationship("Review", backref="subject", lazy="dynamic")
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
     # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))

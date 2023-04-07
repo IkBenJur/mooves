@@ -15,8 +15,8 @@ convention = {
     "pk": "pk_%(table_name)s"
 }
 metadata = MetaData(naming_convention=convention)
-db = SQLAlchemy(app,metadata=metadata)
-migrate = Migrate(app, db, render_as_batch=True)
+db = SQLAlchemy(app, metadata=metadata)
+migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = "login"
 
