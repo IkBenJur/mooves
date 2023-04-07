@@ -35,17 +35,17 @@ class Review(db.Model):
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    movie = db.Column(db.Integer, db.ForeignKey("movie.id"))
+    movie_id = db.Column(db.Integer, db.ForeignKey("movie.id"))
     reviewBody = db.Column(db.String(140))
     stars = db.Column(db.Integer, index=True)
 
     def __repr__(self):
-        return f"{self.user_id}, {self.movie}"
+        return f"{self.reviewBody}"
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), index=True)
-    reviews = db.relationship("Review", backref="review", lazy="dynamic")
+    reviews = db.relationship("Review", backref="movie", lazy="dynamic")
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
     # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
