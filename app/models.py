@@ -4,6 +4,8 @@ from flask_login import UserMixin
 from hashlib import md5
 from datetime import datetime
 
+#Laat users favoriete films kiezen en reviews scrhijven
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), index=True, unique=True)
@@ -11,6 +13,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    reviews = db.relationship("Review", backref="author", lazy="dynamic")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -28,21 +31,31 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
-    
-class Genre(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    genre = db.Column(db.String(64), index=True, unique=True)
-    movies = db.Relationship("Movie", backref="genre", lazy="dynamic")
 
-    def __repr__(self):
-        return f"{self.genre}"
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
+    #db.Relationship gebruikt de modelclass naam
+    user_id = db.Column(db.Integer, db.ForeingKey("user.id"))
+    movie = db.Column(db.Integer, db.ForeingKey("movie.id"))
+    reviewBody = db.Column(db.String(140))
+    stars = db.Column(db.Integer, index=True)
+    
+# class Genre(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     genre = db.Column(db.String(64), index=True, unique=True)
+#     movies = db.Relationship("Movie", backref="genre", lazy="dynamic")
+
+#     def __repr__(self):
+#         return f"{self.genre}"
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), index=True)
+    reviews = db.relationship("Review", backref="review", lazy="dynamic")
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
-    genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
+    # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
 
     def __repr__(self):
         return f"{self.title}"
