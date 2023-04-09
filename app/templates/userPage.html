@@ -15,5 +15,13 @@
     </tr>
 </table>
 <hr>
-Hier komen favourite movies te staan en reviews
+<h2>Favourites</h2>
+<!-- Dit wordt een horizontale scoll lijst met de posters -->
+{% for movie in user.favourites %}
+    <p>{{ movie.title }}</p>
+{% endfor %}
+<h2>Reviews</h2>
+{% for review in reviews %}
+    {% include "_review.html" %}
+{% endfor %}
 {% endblock %}

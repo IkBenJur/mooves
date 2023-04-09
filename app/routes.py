@@ -62,7 +62,8 @@ def register():
 @login_required
 def userPage(username):
     u = User.query.filter_by(username=username).first_or_404()
-    return render_template("userPage.html", user=u)
+    reviews = Review.query.filter_by(user_id=u.id).all()
+    return render_template("userPage.html", user=u, reviews=reviews)
 
 @app.route("/edit_profile", methods=["GET", "POST"])
 @login_required
