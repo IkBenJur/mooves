@@ -4,6 +4,11 @@ from flask_login import UserMixin
 from hashlib import md5
 from datetime import datetime
 
+user_movie = db.Table("user_movie",
+                      db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+                      db.Column("movie_id", db.Integer, db.ForeignKey("movie.id"))
+                )
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), index=True, unique=True)
@@ -11,7 +16,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    reviews = db.Relationship("Review", backref="author", lazy="dynamic")
+    reviews = db.relationship("Review", backref="author", lazy="dynamic")
+    favourites = db.relationship("Movie", secondary=user_movie, backref="favourited")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -45,7 +51,7 @@ class Review(db.Model):
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), index=True)
-    reviews = db.Relationship("Review", backref="subject", lazy="dynamic")
+    reviews = db.relationship("Review", backref="subject", lazy="dynamic")
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
     # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
