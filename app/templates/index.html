@@ -3,6 +3,9 @@
 {% block content %}
     <h1>Welcome, {{ current_user.username }}</h1>
     {% for movie in movies %}
-    <p>{{ movie.title }}, {{ movie.genre.type }}</p>
+    <p>{{ movie.title }}</p>
+    {% endfor %}
+    {% for review in reviews %}
+    <p>{{ review.user_id }}, {{ review.reviewBody }}, {{ review.stars }}</p>
     {% endfor %}
 {% endblock %}

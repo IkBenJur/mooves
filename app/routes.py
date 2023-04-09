@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm
-from app.models import User
+from app.models import User, Movie, Review
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
@@ -16,17 +16,9 @@ def before_request():
 @app.route("/index")
 @login_required
 def index():
-    movies = [
-        {
-            "title":"Fury",
-            "genre":{"type":"action"}
-        },
-        {
-            "title":"The wolf of wallstreet",
-            "genre":{"type":"comedy"}
-        }
-    ]
-    return render_template("index.html", movies=movies)
+    movies = Movie.query.all()
+    reviews = Review.query.order_by(Review.id.desc()).limit(5).all()
+    return render_template("index.html", movies=movies, reviews=reviews)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
