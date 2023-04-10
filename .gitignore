@@ -3,3 +3,4 @@ config.py
 venv/
 migrations/
 app.db
+.flaskenv
