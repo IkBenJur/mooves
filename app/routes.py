@@ -17,7 +17,7 @@ def before_request():
 @login_required
 def index():
     movies = Movie.query.all()
-    reviews = Review.query.order_by(Review.id.desc()).limit(5).all()
+    reviews = Review.recent_Reviews()
     return render_template("index.html", movies=movies, reviews=reviews)
 
 @app.route("/login", methods=["GET", "POST"])

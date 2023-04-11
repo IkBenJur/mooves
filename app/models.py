@@ -59,6 +59,9 @@ class Review(db.Model):
     reviewBody = db.Column(db.String(140))
     stars = db.Column(db.Integer, index=True)
 
+    def recent_Reviews():
+        return Review.query.order_by(Review.id.desc()).limit(5).all()
+
     def __repr__(self):
         return f"{self.reviewBody}"
 
