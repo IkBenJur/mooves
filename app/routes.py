@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, emptyForm
 from app.models import User, Movie, Review
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -79,3 +79,35 @@ def edit_profile():
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
     return render_template("editProfile.html", form=form)
+
+@app.route("/favourite/<movieTitle>", methods=["POST"])
+@login_required
+def favourite(movieTitle):
+    form = emptyForm()
+    if form.validate_on_submit():
+        movie = Movie.query.filter_by(title=movieTitle).first()
+        if movie is None:
+            flash(f"Movie {movieTitle} not found")
+            return redirect(url_for("index"))
+        current_user.favourite(movie)
+        db.session.commit()
+        flash(f"You've added a new favourite movie! {movieTitle}")
+        return redirect(url_for("user", username=current_user.username))
+    else:
+        return redirect(url_for("index"))
+    
+@app.route("/unfavourite/<movieTitle>")
+@login_required
+def unfavourite(movieTitle):
+    form = emptyForm()
+    if form.validate_on_submit():
+        movie = Movie.query.filter_by(title=movieTitle).first()
+        if movie is None:
+            flash(f"Movie {movieTitle} is not found")
+            return redirect(url_for("index"))
+        current_user.unfavourite(movie)
+        db.session.commit()
+        flash(f"You unfavourited {movieTitle}")
+        return redirect(url_for("user", username=current_user.username))
+    else:
+        return redirect(url_for("index"))
