@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     reviews = db.relationship("Review", backref="author", lazy="dynamic")
     favourites = db.relationship("Movie", secondary=user_movie,
-                                backref="favourited", lazy="dynamic")
+                                backref=db.backref("favourited", lazy="dynamic"), lazy="dynamic")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
