@@ -17,7 +17,8 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     reviews = db.relationship("Review", backref="author", lazy="dynamic")
-    favourites = db.relationship("Movie", secondary=user_movie, backref="favourited")
+    favourites = db.relationship("Movie", secondary=user_movie,
+                                backref="favourited", lazy="dynamic")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -28,6 +29,19 @@ class User(UserMixin, db.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode("utf-8")).hexdigest()
         return f"https://www.gravatar.com/avatar/{digest}?d=mp&s={size}"
+    
+    def favourite(self, movie):
+        if not self.is_favourited(movie):
+            self.favourites.append(movie)
+
+    def unfavourite(self, movie):
+        if self.is_favourited(movie):
+            self.favourites.remove(movie)
+
+    def is_favourited(self, movie):
+        return self.favourites.filter(
+            user_movie.c.movie_id == movie.id
+        ).count() > 0
 
     def __repr__(self):
         return f"{self.username}"
