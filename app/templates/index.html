@@ -3,7 +3,20 @@
 {% block content %}
     <h1>Welcome, {{ current_user.username }}</h1>
     {% for movie in movies %}
-    <p>{{ movie.title }}</p>
+    <p>
+        {{ movie.title }}
+        {% if not current_user.is_favourited(movie) %}
+            <form action="{{ url_for('favourite', movieTitle=movie.title) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value="Favourite") }}
+            </form>
+        {% else %}
+            <form action="{{ url_for('unfavourite', movieTitle=movie.title) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value="Unfavourite") }}
+            </form>
+        {% endif %}
+    </p>
     {% endfor %}
     {% for review in reviews %}
     <p>{{ review.user_id }}, {{ review.reviewBody }}, {{ review.stars }}</p>

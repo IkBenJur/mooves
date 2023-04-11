@@ -18,7 +18,8 @@ def before_request():
 def index():
     movies = Movie.query.all()
     reviews = Review.recent_Reviews()
-    return render_template("index.html", movies=movies, reviews=reviews)
+    form = emptyForm()
+    return render_template("index.html", movies=movies, reviews=reviews, form=form)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -92,11 +93,11 @@ def favourite(movieTitle):
         current_user.favourite(movie)
         db.session.commit()
         flash(f"You've added a new favourite movie! {movieTitle}")
-        return redirect(url_for("user", username=current_user.username))
+        return redirect(url_for("userPage", username=current_user.username))
     else:
         return redirect(url_for("index"))
     
-@app.route("/unfavourite/<movieTitle>")
+@app.route("/unfavourite/<movieTitle>", methods=["POST"])
 @login_required
 def unfavourite(movieTitle):
     form = emptyForm()
@@ -108,6 +109,6 @@ def unfavourite(movieTitle):
         current_user.unfavourite(movie)
         db.session.commit()
         flash(f"You unfavourited {movieTitle}")
-        return redirect(url_for("user", username=current_user.username))
+        return redirect(url_for("userPage", username=current_user.username))
     else:
         return redirect(url_for("index"))
