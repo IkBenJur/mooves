@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, emptyForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, emptyForm, ReviewForm
 from app.models import User, Movie, Review
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -12,14 +12,24 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
-@app.route("/")
-@app.route("/index")
+@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
 @login_required
 def index():
     movies = Movie.query.all()
     reviews = Review.recent_Reviews()
     form = emptyForm()
-    return render_template("index.html", movies=movies, reviews=reviews, form=form)
+    reviewForm = ReviewForm()
+    if reviewForm.validate_on_submit():
+        # HARD CODED TO ONE MOVIE
+        movie = Movie.query.get(3)
+        review = Review(subject=movie, reviewBody=reviewForm.review.data,
+                        stars=reviewForm.stars.data, author=current_user)
+        db.session.add(review)
+        db.session.commit()
+        flash("You review has been submitted")
+        redirect(url_for("index"))
+    return render_template("index.html", movies=movies, reviews=reviews, favourite=form, reviewForm=reviewForm)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

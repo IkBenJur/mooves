@@ -2,23 +2,41 @@
 
 {% block content %}
     <h1>Welcome, {{ current_user.username }}</h1>
-    {% for movie in movies %}
     <p>
+        <form action="" method="post">
+            {{ reviewForm.hidden_tag() }}
+            <p>
+                {{ reviewForm.review.label() }}<br>
+                {{ reviewForm.review(cols=32, rows=4) }}<br>
+                {% for error in reviewForm.review.errors %}
+                <span style="color: red">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ reviewForm.stars.label() }}<br>
+                {{ reviewForm.stars() }} <br>
+                {% for error in reviewForm.stars.errors %}
+                <span style="color: red">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ reviewForm.submit() }}</p>
+        </form>
+    {% for movie in movies %}
         {{ movie.title }}
         {% if not current_user.is_favourited(movie) %}
             <form action="{{ url_for('favourite', movieTitle=movie.title) }}" method="post">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value="Favourite") }}
+                {{ favourite.hidden_tag() }}
+                {{ favourite.submit(value="Favourite") }}
             </form>
         {% else %}
             <form action="{{ url_for('unfavourite', movieTitle=movie.title) }}" method="post">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value="Unfavourite") }}
+                {{ favourite.hidden_tag() }}
+                {{ favourite.submit(value="Unfavourite") }}
             </form>
         {% endif %}
     </p>
     {% endfor %}
     {% for review in reviews %}
-    <p>{{ review.user_id }}, {{ review.reviewBody }}, {{ review.stars }}</p>
+    <p>{{ review.author }}, {{ review.reviewBody }}, {{ review.stars }}</p>
     {% endfor %}
 {% endblock %}

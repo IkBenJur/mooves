@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
 from app.models import User
 
 class LoginForm(FlaskForm):
@@ -42,4 +42,11 @@ class EditProfileForm(FlaskForm):
                 raise ValidationError("Please use a different username.")
             
 class emptyForm(FlaskForm):
+    submit = SubmitField("Submit")
+
+class ReviewForm(FlaskForm):
+    review = TextAreaField("Write a review", validators=[
+        DataRequired(), Length(min=1, max=140)
+    ])
+    stars = IntegerField("Stars", validators=[DataRequired(), NumberRange(min=0, max=5)])
     submit = SubmitField("Submit")
