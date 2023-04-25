@@ -122,3 +122,9 @@ def unfavourite(movieTitle):
         return redirect(url_for("userPage", username=current_user.username))
     else:
         return redirect(url_for("index"))
+    
+@app.route("/movie/<movieId>")
+@login_required
+def movie(movieId):
+    movie = Movie.query.get(movieId)
+    return render_template("movie.html", movie=movie)
