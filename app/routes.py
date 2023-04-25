@@ -127,4 +127,7 @@ def unfavourite(movieTitle):
 @login_required
 def movie(movieId):
     movie = Movie.query.get(movieId)
+    if movie is None:
+        flash("Movie is not in database")
+        redirect(url_for("index"))
     return render_template("movie.html", movie=movie)
