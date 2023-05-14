@@ -9,6 +9,11 @@ user_movie = db.Table("user_movie",
                       db.Column("movie_id", db.Integer, db.ForeignKey("movie.id"))
                 )
 
+movie_genre = db.Table('movie_genre',
+                       db.Column('movie_id', db.Integer, db.ForeignKey('movie.id')),
+                       db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
+                       )
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), index=True, unique=True)
@@ -69,6 +74,8 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), index=True)
     reviews = db.relationship("Review", backref="subject", lazy="dynamic")
+    genres = db.relationship('Genre', secondary=movie_genre, lazy="dynamic",
+                              backref=db.backref('movies', lazy="dynamic"))
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
     # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
