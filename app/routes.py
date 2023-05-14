@@ -1,10 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, emptyForm, ReviewForm
-from app.models import User, Movie, Review
+from app.models import User, Movie, Review, Genre
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
+import csv
 
 @app.before_request
 def before_request():
@@ -129,5 +130,51 @@ def movie(movieId):
     movie = Movie.query.get(movieId)
     if movie is None:
         flash("Movie is not in database")
-        redirect(url_for("index"))
+        #Redirect to previous page
+        redirect(url_for())
     return render_template("movie.html", movie=movie)
+
+@app.route("/load_data")
+def load_data():
+    with open("testingDB\imdb_top_1000.csv", "r", encoding="utf-8") as file:
+        csv_reader = csv.reader((line.rstrip() for line in file), delimiter=',')
+
+        # Read the header and store it in a variable
+        header = next(csv_reader)
+
+        # Convert the CSV reader object to a list containing the remaining data
+        data_list = [dict(zip(header, row)) for row in csv_reader]
+
+
+    unique_genres = set()
+    for row in data_list:
+        genres = row['Genre'].split(',')
+        for genre in genres:
+            unique_genres.add(genre.strip())
+
+    # Convert the set of unique genres to a list
+    unique_genres_list = list(unique_genres)
+    # for genre in unique_genres_list:
+    #     genre_obj = Genre(name=genre)
+    #     db.session.add(genre_obj)
+    
+    for movie in data_list:
+        movie_obj = Movie(title=movie["Series_Title"],
+                          year=movie["Released_Year"],
+                          rated=movie["Certificate"],
+                          runtime=movie["Runtime"],
+                          plot=movie["Overview"],
+                          metascore=movie["Meta_score"],
+                          director=movie["Director"],
+                          imdb_rating=movie["IMDB_Rating"],
+                          imdb_votes=movie["No_of_Votes"],
+                          poster_url=movie["Poster_Link"]
+                        )
+        # db.session.add(movie_obj)
+        for genre in movie["Genre"].split(','):
+            genre_obj = Genre.query.filter_by(name=genre.strip()).first()
+            if genre_obj != None:
+                movie_obj.genres.append(genre_obj)
+            
+    # db.session.commit()
+    return "Data loaded"
