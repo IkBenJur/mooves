@@ -78,7 +78,15 @@ class Movie(db.Model):
                               backref=db.backref('movies', lazy="dynamic"))
     #db.ForeignKey gebruikt de SQLAlchemy table name dus lowercase (snakecase voor multi word)
     #db.Relationship gebruikt de modelclass naam
-    # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
+    year = db.Column(db.Integer)
+    rated = db.Column(db.String(10))
+    runtime = db.Column(db.Integer)
+    plot = db.Column(db.Text)
+    metascore = db.Column(db.Integer)
+    director = db.Column(db.String(255))
+    imdb_rating = db.Column(db.Float)
+    imdb_votes = db.Column(db.Integer)
+    poster_url = db.Column(db.String(255))
 
     def __repr__(self):
         return f"{self.title}"
