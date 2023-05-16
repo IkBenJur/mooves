@@ -21,9 +21,27 @@
             </p>
             <p>{{ reviewForm.submit() }}</p>
         </form>
-    {% for movie in movies %}
+    {% for genre_cat  in genres %}
+        <div class="genre">
+            {{ genre_cat }}
+            {% for movie in movies %}
+                {% for genre_movie in movie.genres %}
+                    {% if genre_movie == genre_cat %}
+                        <div class="movie-card">
+                            <img src="{{ movie.poster_url }}">
+                            {{ movie.title }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <!-- {% for movie in movies %}
         {{ movie.title }}
-        {% if not current_user.is_favourited(movie) %}
+        {% for genre in movie.genres %}
+            
+        {% endfor %} -->
+        <!-- {% if not current_user.is_favourited(movie) %}
             <form action="{{ url_for('favourite', movieTitle=movie.title) }}" method="post">
                 {{ favourite.hidden_tag() }}
                 {{ favourite.submit(value="Favourite") }}
@@ -33,9 +51,9 @@
                 {{ favourite.hidden_tag() }}
                 {{ favourite.submit(value="Unfavourite") }}
             </form>
-        {% endif %}
-    </p>
-    {% endfor %}
+        {% endif %} -->
+    <!-- </p> -->
+    <!-- {% endfor %} -->
     {% for review in reviews %}
     <p>{{ review.author }}, {{ review.reviewBody }}, {{ review.stars }}</p>
     {% endfor %}
