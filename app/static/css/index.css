@@ -3,6 +3,12 @@ body{
     color: white;
 }
 
+.genre {
+    background-color: 484242;
+    border-radius: 10px;
+    margin-bottom: 10%;
+}
+
 .genre-slider {
     display: flex;
     flex-direction: row;
