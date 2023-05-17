@@ -22,6 +22,7 @@ def index():
     genres = Genre.query.all()
     form = emptyForm()
     reviewForm = ReviewForm()
+    dayMovie = Movie.query.filter_by(title="The Wolf of Wall Street").first()
     if reviewForm.validate_on_submit():
         # HARD CODED TO ONE MOVIE
         movie = Movie.query.get(3)
@@ -31,7 +32,7 @@ def index():
         db.session.commit()
         flash("You review has been submitted")
         redirect(url_for("index"))
-    return render_template("index.html", movies=movies, reviews=reviews, favourite=form, reviewForm=reviewForm, genres = genres)
+    return render_template("index.html", movies=movies, reviews=reviews, favourite=form, reviewForm=reviewForm, genres = genres, dayMovie = dayMovie)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
