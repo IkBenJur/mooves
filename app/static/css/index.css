@@ -2,3 +2,9 @@ body{
     background-color: 201D1D;
     color: white;
 }
+
+.genre-slider {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
