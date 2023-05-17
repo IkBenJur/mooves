@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
+{% block header %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" type="text/css" />
+{% endblock %}
+
 {% block content %}
     <h1>Welcome, {{ current_user.username }}</h1>
-    <p>
-        <form action="" method="post">
+        <!-- <form action="" method="post">
             {{ reviewForm.hidden_tag() }}
             <p>
                 {{ reviewForm.review.label() }}<br>
@@ -20,10 +23,11 @@
                 {% endfor %}
             </p>
             <p>{{ reviewForm.submit() }}</p>
-        </form>
+        </form> -->
     {% for genre_cat  in genres %}
         <div class="genre">
             {{ genre_cat }}
+            <div class="genre-slider">
             {% for movie in movies %}
                 {% for genre_movie in movie.genres %}
                     {% if genre_movie == genre_cat %}
@@ -34,6 +38,7 @@
                     {% endif %}
                 {% endfor %}
             {% endfor %}
+            </div>
         </div>
     {% endfor %}
     <!-- {% for movie in movies %}
