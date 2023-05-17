@@ -5,7 +5,16 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Welcome, {{ current_user.username }}</h1>
+    <div class="movie-of-the-day">
+        <div class="dayMovie-text">
+            <h2>Movie Of The Day</h2>
+            <h1>{{ dayMovie.title }}</h1>
+            <p>{{ dayMovie.plot }}</p>
+        </div>
+        <div class="dayMovie-poster">
+            <img src="{{ dayMovie.poster_url }}" alt="{{ dayMovie.poster_url }}">
+        </div>
+    </div>
         <!-- <form action="" method="post">
             {{ reviewForm.hidden_tag() }}
             <p>
@@ -32,7 +41,7 @@
                 {% for genre_movie in movie.genres %}
                     {% if genre_movie == genre_cat %}
                         <div class="movie-card">
-                            <img src="{{ movie.poster_url }}">
+                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
                             {{ movie.title }}
                         </div>
                     {% endif %}
