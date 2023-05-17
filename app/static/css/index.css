@@ -20,3 +20,19 @@
     height: 350px;
     width: 250px;
 }
+
+.movie-of-the-day {
+    display: flex;
+    background-color: 484242;
+    border-radius: 10px;
+    margin-bottom: 10%;
+    margin-top: 5%;
+    width: 1232px;
+    height: 487px;
+    align-self: center;
+}
+
+.movie-of-the-day img {
+    width: 323px;
+    height: 389px;
+}

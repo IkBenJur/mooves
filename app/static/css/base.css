@@ -1,6 +1,8 @@
 body{
     background-color: 201D1D;
     color: white;
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar {
