@@ -17,8 +17,9 @@ def before_request():
 @app.route("/index", methods=["GET", "POST"])
 @login_required
 def index():
-    movies = Movie.query.all()
+    movies = Movie.query.limit(50).all()
     reviews = Review.recent_Reviews()
+    genres = Genre.query.all()
     form = emptyForm()
     reviewForm = ReviewForm()
     if reviewForm.validate_on_submit():
@@ -30,7 +31,7 @@ def index():
         db.session.commit()
         flash("You review has been submitted")
         redirect(url_for("index"))
-    return render_template("index.html", movies=movies, reviews=reviews, favourite=form, reviewForm=reviewForm)
+    return render_template("index.html", movies=movies, reviews=reviews, favourite=form, reviewForm=reviewForm, genres = genres)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
